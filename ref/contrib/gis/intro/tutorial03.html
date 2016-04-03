@@ -1,0 +1,210 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Working with GeoDjango, part 3: representing geographical data &mdash; Django 1.10.dev20160403091654 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.10.dev20160403091654',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="Django 1.10.dev20160403091654 documentation" href="../../../../contents.html" />
+
+
+
+ 
+<script type="text/javascript" src="../../../../templatebuiltins.js"></script>
+<script type="text/javascript">
+(function($) {
+    if (!django_template_builtins) {
+       // templatebuiltins.js missing, do nothing.
+       return;
+    }
+    $(document).ready(function() {
+        // Hyperlink Django template tags and filters
+        var base = "../../../templates/builtins.html";
+        if (base == "#") {
+            // Special case for builtins.html itself
+            base = "";
+        }
+        // Tags are keywords, class '.k'
+        $("div.highlight\\-html\\+django span.k").each(function(i, elem) {
+             var tagname = $(elem).text();
+             if ($.inArray(tagname, django_template_builtins.ttags) != -1) {
+                 var fragment = tagname.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + tagname + "</a>");
+             }
+        });
+        // Filters are functions, class '.nf'
+        $("div.highlight\\-html\\+django span.nf").each(function(i, elem) {
+             var filtername = $(elem).text();
+             if ($.inArray(filtername, django_template_builtins.tfilters) != -1) {
+                 var fragment = filtername.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + filtername + "</a>");
+             }
+        });
+    });
+})(jQuery);
+</script>
+
+
+  </head>
+  <body role="document">
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../../../index.html">Home</a>  |
+        <a title="Table of contents" href="../../../../contents.html">Table of contents</a>  |
+        <a title="Global index" href="../../../../genindex.html">Index</a>  |
+        <a title="Module index" href="../../../../py-modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-gis-intro-tutorial03">
+            
+  <div class="section" id="s-working-with-geodjango-part-3-representing-geographical-data">
+<span id="working-with-geodjango-part-3-representing-geographical-data"></span><h1>Working with GeoDjango, part 3: representing geographical data<a class="headerlink" href="#working-with-geodjango-part-3-representing-geographical-data" title="Permalink to this headline">¶</a></h1>
+<p>Raw geographical data is rarely useful. You will probably want to output it in
+a way that users can actually read it, that is in the form of a map.</p>
+<p>In this example we will be using the <a class="reference external" href="http://leafletjs.com/">Leaflet</a>
+JavaScript library since it&#8217;s very easy to use and it&#8217;s actively maintained.</p>
+<p>Start by including the Leaflet library in your template:</p>
+<div class="highlight-python"><div class="snippet-filename">tracking/templates/index.html</div>
+<div class="highlight"><pre>&lt;html&gt;
+  &lt;head&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.css&quot; /&gt;
+    &lt;script src=&quot;http://cdn.leafletjs.com/leaflet/v0.7.7/leaflet.js&quot;&gt;&lt;/script&gt;
+  &lt;/head&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<p>Then let&#8217;s build a view that will return the position of all animals as well as
+the coordinates of all the reserves. The
+<a class="reference internal" href="../geos.html#django.contrib.gis.geos.Point" title="django.contrib.gis.geos.Point"><code class="xref py py-class docutils literal"><span class="pre">Point</span></code></a> class provides a <cite>json</cite> method that
+allows you to directly output the coordinates in a JSON.</p>
+<div class="highlight-python"><div class="snippet-filename">tracking/views.py</div>
+<div class="highlight"><pre><span class="k">def</span> <span class="nf">index</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s">&#39;animals_positions&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">a</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">json</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()],</span>
+        <span class="s">&#39;reserves_boundaries&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">r</span><span class="o">.</span><span class="n">boundaries</span><span class="o">.</span><span class="n">json</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">Reserve</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()],</span>
+    <span class="p">})</span>
+</pre></div>
+</div>
+<p>For the data to be displayed on the map, we need to pass it to JavaScript. For
+that, we&#8217;ll put it in the template:</p>
+<div class="highlight-python"><div class="snippet-filename">tracking/templates/index.html</div>
+<div class="highlight"><pre>&lt;html&gt;
+  ...
+  &lt;body&gt;
+    &lt;script&gt;
+      var animals = [{{ animals_positions|join:&quot;,&quot; }}];
+      var reserves = [{{ reserves_boundaries|join:&quot;,&quot; }}];
+    &lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+<p>And now we can display the data on the map:</p>
+<div class="highlight-python"><div class="snippet-filename">tracking/templates/index.html</div>
+<div class="highlight"><pre>...
+&lt;body&gt;
+  ...
+  &lt;script&gt;
+
+  &lt;/script&gt;
+&lt;/body&gt;
+</pre></div>
+</div>
+<p>TODO:</p>
+<ul class="simple">
+<li>REST</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3>Browse</h3>
+  <ul>
+    
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a>
+        
+        <ul><li>Working with GeoDjango, part 3: representing geographical data</li></ul>
+        
+      </li>
+  </ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/ref/contrib/gis/intro/tutorial03.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Apr 03, 2016</p>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

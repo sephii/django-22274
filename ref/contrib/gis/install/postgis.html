@@ -1,0 +1,238 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing PostGIS &mdash; Django 1.10.dev20160403091654 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.10.dev20160403091654',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="Django 1.10.dev20160403091654 documentation" href="../../../../contents.html" />
+
+
+
+ 
+<script type="text/javascript" src="../../../../templatebuiltins.js"></script>
+<script type="text/javascript">
+(function($) {
+    if (!django_template_builtins) {
+       // templatebuiltins.js missing, do nothing.
+       return;
+    }
+    $(document).ready(function() {
+        // Hyperlink Django template tags and filters
+        var base = "../../../templates/builtins.html";
+        if (base == "#") {
+            // Special case for builtins.html itself
+            base = "";
+        }
+        // Tags are keywords, class '.k'
+        $("div.highlight\\-html\\+django span.k").each(function(i, elem) {
+             var tagname = $(elem).text();
+             if ($.inArray(tagname, django_template_builtins.ttags) != -1) {
+                 var fragment = tagname.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + tagname + "</a>");
+             }
+        });
+        // Filters are functions, class '.nf'
+        $("div.highlight\\-html\\+django span.nf").each(function(i, elem) {
+             var filtername = $(elem).text();
+             if ($.inArray(filtername, django_template_builtins.tfilters) != -1) {
+                 var fragment = filtername.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + filtername + "</a>");
+             }
+        });
+    });
+})(jQuery);
+</script>
+
+
+  </head>
+  <body role="document">
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../../../index.html">Home</a>  |
+        <a title="Table of contents" href="../../../../contents.html">Table of contents</a>  |
+        <a title="Global index" href="../../../../genindex.html">Index</a>  |
+        <a title="Module index" href="../../../../py-modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-gis-install-postgis">
+            
+  <div class="section" id="s-installing-postgis">
+<span id="installing-postgis"></span><h1>Installing PostGIS<a class="headerlink" href="#installing-postgis" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://postgis.net/">PostGIS</a> adds geographic object support to PostgreSQL, turning it
+into a spatial database. <a class="reference internal" href="geolibs.html#geosbuild"><span>GEOS</span></a>, <a class="reference internal" href="geolibs.html#proj4"><span>PROJ.4</span></a> and
+<a class="reference internal" href="geolibs.html#gdalbuild"><span>GDAL</span></a> should be installed prior to building PostGIS. You
+might also need additional libraries, see <a class="reference external" href="http://postgis.net/docs/manual-2.1/postgis_installation.html#install_requirements">PostGIS requirements</a>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The <a class="reference external" href="http://initd.org/psycopg/">psycopg2</a> module is required for use as the database adapter
+when using GeoDjango with PostGIS.</p>
+</div>
+<p>On Debian/Ubuntu, you are advised to install the following packages:
+postgresql-x.x, postgresql-x.x-postgis, postgresql-server-dev-x.x,
+python-psycopg2 (x.x matching the PostgreSQL version you want to install).
+Please also consult platform-specific instructions if you are on <a class="reference internal" href="index.html#macosx"><span>Mac OS X</span></a>
+or <a class="reference internal" href="index.html#windows"><span>Windows</span></a>.</p>
+<div class="section" id="s-building-from-source">
+<span id="building-from-source"></span><h2>Building from source<a class="headerlink" href="#building-from-source" title="Permalink to this headline">¶</a></h2>
+<p>First download the source archive, and extract:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ wget http://download.osgeo.org/postgis/source/postgis-2.1.5.tar.gz
+$ tar xzf postgis-2.1.5.tar.gz
+$ cd postgis-2.1.5
+</pre></div>
+</div>
+<p>Next, configure, make and install PostGIS:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ ./configure
+</pre></div>
+</div>
+<p>Finally, make and install:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ make
+$ sudo make install
+$ cd ..
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">GeoDjango does not automatically create a spatial database.  Please consult
+the section on <a class="reference internal" href="#spatialdb-template91"><span>Creating a spatial database</span></a> for more information.</p>
+</div>
+</div>
+<div class="section" id="s-post-installation">
+<span id="post-installation"></span><h2>Post-installation<a class="headerlink" href="#post-installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-creating-a-spatial-database">
+<span id="s-spatialdb-template91"></span><span id="s-spatialdb-template"></span><span id="creating-a-spatial-database"></span><span id="spatialdb-template91"></span><span id="spatialdb-template"></span><h3>Creating a spatial database<a class="headerlink" href="#creating-a-spatial-database" title="Permalink to this headline">¶</a></h3>
+<p>PostGIS 2 includes an extension for PostgreSQL that&#8217;s used to enable spatial
+functionality:</p>
+<div class="highlight-python"><div class="highlight"><pre>$ createdb  &lt;db name&gt;
+$ psql &lt;db name&gt;
+&gt; CREATE EXTENSION postgis;
+</pre></div>
+</div>
+<p>The database user must be a superuser in order to run
+<code class="docutils literal"><span class="pre">CREATE</span> <span class="pre">EXTENSION</span> <span class="pre">postgis;</span></code>. The command is run during the <a class="reference internal" href="../../../django-admin.html#django-admin-migrate"><code class="xref std std-djadmin docutils literal"><span class="pre">migrate</span></code></a>
+process.</p>
+<p>GeoDjango does not currently leverage any <a class="reference external" href="http://postgis.net/docs/Topology.html">PostGIS topology functionality</a>.
+If you plan to use those features at some point, you can also install the
+<code class="docutils literal"><span class="pre">postgis_topology</span></code> extension by issuing <code class="docutils literal"><span class="pre">CREATE</span> <span class="pre">EXTENSION</span>
+<span class="pre">postgis_topology;</span></code>.</p>
+</div>
+<div class="section" id="s-managing-the-database">
+<span id="managing-the-database"></span><h3>Managing the database<a class="headerlink" href="#managing-the-database" title="Permalink to this headline">¶</a></h3>
+<p>To administer the database, you can either use the pgAdmin III program
+(<span class="menuselection">Start ‣ PostgreSQL 9.x ‣ pgAdmin III</span>) or the
+SQL Shell (<span class="menuselection">Start ‣ PostgreSQL 9.x ‣ SQL Shell</span>).
+For example, to create a <code class="docutils literal"><span class="pre">geodjango</span></code> spatial database and user, the following
+may be executed from the SQL Shell as the <code class="docutils literal"><span class="pre">postgres</span></code> user:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">postgres</span><span class="c"># CREATE USER geodjango PASSWORD &#39;my_passwd&#39;;</span>
+<span class="n">postgres</span><span class="c"># CREATE DATABASE geodjango OWNER geodjango;</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing PostGIS</a><ul>
+<li><a class="reference internal" href="#building-from-source">Building from source</a></li>
+<li><a class="reference internal" href="#post-installation">Post-installation</a><ul>
+<li><a class="reference internal" href="#creating-a-spatial-database">Creating a spatial database</a></li>
+<li><a class="reference internal" href="#managing-the-database">Managing the database</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a>
+        
+        <ul><li>Installing PostGIS</li></ul>
+        
+      </li>
+  </ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/ref/contrib/gis/install/postgis.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Apr 03, 2016</p>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

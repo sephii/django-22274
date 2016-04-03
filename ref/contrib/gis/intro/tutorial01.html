@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Working with GeoDjango, part 1: the models &mdash; Django 1.10.dev20160403091654 documentation</title>
+    
+    <link rel="stylesheet" href="../../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../../',
+        VERSION:     '1.10.dev20160403091654',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="top" title="Django 1.10.dev20160403091654 documentation" href="../../../../contents.html" />
+
+
+
+ 
+<script type="text/javascript" src="../../../../templatebuiltins.js"></script>
+<script type="text/javascript">
+(function($) {
+    if (!django_template_builtins) {
+       // templatebuiltins.js missing, do nothing.
+       return;
+    }
+    $(document).ready(function() {
+        // Hyperlink Django template tags and filters
+        var base = "../../../templates/builtins.html";
+        if (base == "#") {
+            // Special case for builtins.html itself
+            base = "";
+        }
+        // Tags are keywords, class '.k'
+        $("div.highlight\\-html\\+django span.k").each(function(i, elem) {
+             var tagname = $(elem).text();
+             if ($.inArray(tagname, django_template_builtins.ttags) != -1) {
+                 var fragment = tagname.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + tagname + "</a>");
+             }
+        });
+        // Filters are functions, class '.nf'
+        $("div.highlight\\-html\\+django span.nf").each(function(i, elem) {
+             var filtername = $(elem).text();
+             if ($.inArray(filtername, django_template_builtins.tfilters) != -1) {
+                 var fragment = filtername.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + filtername + "</a>");
+             }
+        });
+    });
+})(jQuery);
+</script>
+
+
+  </head>
+  <body role="document">
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../../../index.html">Home</a>  |
+        <a title="Table of contents" href="../../../../contents.html">Table of contents</a>  |
+        <a title="Global index" href="../../../../genindex.html">Index</a>  |
+        <a title="Module index" href="../../../../py-modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-gis-intro-tutorial01">
+            
+  <div class="section" id="s-working-with-geodjango-part-1-the-models">
+<span id="working-with-geodjango-part-1-the-models"></span><h1>Working with GeoDjango, part 1: the models<a class="headerlink" href="#working-with-geodjango-part-1-the-models" title="Permalink to this headline">¶</a></h1>
+<p>In this tutorial we&#8217;re going to build the foundations of an application that
+tracks animals in natural reserves.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This tutorial assumes familiarity with Django; thus, if you&#8217;re brand new to
+Django, please read through the <a class="reference internal" href="../../../../intro/tutorial01.html"><em>regular tutorial</em></a> to
+familiarize yourself with Django first.</p>
+<p class="last">GeoDjango has additional requirements beyond what Django requires &#8211;
+please consult the <code class="xref doc docutils literal"><span class="pre">installation</span> <span class="pre">documentation</span></code>
+for more details.</p>
+</div>
+<div class="section" id="s-setting-up">
+<span id="setting-up"></span><h2>Setting up<a class="headerlink" href="#setting-up" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-create-a-new-project">
+<span id="create-a-new-project"></span><h3>Create a new project<a class="headerlink" href="#create-a-new-project" title="Permalink to this headline">¶</a></h3>
+<p>Use the standard <code class="docutils literal"><span class="pre">django-admin</span></code> script to create a project called
+<code class="docutils literal"><span class="pre">geodjango</span></code>:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> django-admin startproject geodjango
+</pre></div>
+</div>
+<p>This will initialize a new project. Now, create a <code class="docutils literal"><span class="pre">tracking</span></code> Django application
+within the <code class="docutils literal"><span class="pre">geodjango</span></code> project:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd </span>geodjango
+<span class="gp">$</span> python manage.py startapp tracking
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-configure-settings-py">
+<span id="configure-settings-py"></span><h3>Configure <code class="docutils literal"><span class="pre">settings.py</span></code><a class="headerlink" href="#configure-settings-py" title="Permalink to this headline">¶</a></h3>
+<p>The <code class="docutils literal"><span class="pre">geodjango</span></code> project settings are stored in the <code class="docutils literal"><span class="pre">geodjango/settings.py</span></code>
+file. Edit the database connection settings to match your setup:</p>
+<div class="highlight-python"><div class="highlight"><pre>DATABASES = {
+    &#39;default&#39;: {
+         &#39;ENGINE&#39;: &#39;django.contrib.gis.db.backends.postgis&#39;,
+         ...
+     }
+}
+</pre></div>
+</div>
+<p>In addition, modify the <a class="reference internal" href="../../../settings.html#std:setting-INSTALLED_APPS"><code class="xref std std-setting docutils literal"><span class="pre">INSTALLED_APPS</span></code></a> setting to include
+<a class="reference internal" href="../../admin/index.html#module-django.contrib.admin" title="django.contrib.admin: Django's admin site."><code class="xref py py-mod docutils literal"><span class="pre">django.contrib.admin</span></code></a>, <a class="reference internal" href="../index.html#module-django.contrib.gis" title="django.contrib.gis: Geographic Information System (GIS) extensions for Django"><code class="xref py py-mod docutils literal"><span class="pre">django.contrib.gis</span></code></a>,
+and <code class="docutils literal"><span class="pre">tracking</span></code> (your newly created application):</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s">&#39;tracking&#39;</span><span class="p">,</span>
+    <span class="s">&#39;django.contrib.gis&#39;</span><span class="p">,</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="s-defining-our-models">
+<span id="defining-our-models"></span><h2>Defining our models<a class="headerlink" href="#defining-our-models" title="Permalink to this headline">¶</a></h2>
+<p>Edit <code class="docutils literal"><span class="pre">tracking/models.py</span></code> to look like the following:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">django.contrib.gis.db</span> <span class="kn">import</span> <span class="n">models</span>
+
+<span class="k">class</span> <span class="nc">Animal</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">species</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">position</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PointField</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&#39;</span><span class="si">%s</span><span class="s"> (</span><span class="si">%s</span><span class="s">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">species</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">Reserve</span><span class="p">(</span><span class="n">models</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+    <span class="n">boundaries</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">PolygonField</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__unicode__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+</pre></div>
+</div>
+<p>As you can see, all Django models are available through GeoDjango&#8217;s models. We
+used a new model type, provided by GeoDjango, named <code class="docutils literal"><span class="pre">PointField</span></code>.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The default spatial reference system for geometry fields is WGS84 (meaning
+the <a class="reference external" href="http://en.wikipedia.org/wiki/SRID">SRID</a> is 4326) &#8211; in other words, the field coordinates are in
+longitude, latitude pairs in units of degrees.  To use a different
+coordinate system, set the SRID of the geometry field with the <code class="docutils literal"><span class="pre">srid</span></code>
+argument. Use an integer representing the coordinate system&#8217;s EPSG code.</p>
+</div>
+<p>After defining your model, we need to sync it with the database. First, create
+a database migration:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python manage.py makemigrations
+<span class="go">Migrations for &#39;tracking&#39;:</span>
+<span class="go">  0001_initial.py:</span>
+<span class="go">    - Create model Animal</span>
+<span class="go">    - Create model Reserve</span>
+</pre></div>
+</div>
+<p>Next, run <a class="reference internal" href="../../../django-admin.html#django-admin-migrate"><code class="xref std std-djadmin docutils literal"><span class="pre">migrate</span></code></a> to create this table in the database:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python manage.py migrate
+<span class="go">Operations to perform:</span>
+<span class="go">  Apply all migrations: admin, tracking, contenttypes, auth, sessions</span>
+<span class="go">Running migrations:</span>
+<span class="go">  ...</span>
+<span class="go">  Applying tracking.0001_initial... OK</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="s-playing-with-the-api">
+<span id="playing-with-the-api"></span><h2>Playing with the API<a class="headerlink" href="#playing-with-the-api" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create some objects and see what we can do with them.</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> python manage.py shell
+</pre></div>
+</div>
+<p>Let&#8217;s see how it works:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">tracking.models</span> <span class="kn">import</span> <span class="n">Animal</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.gis.geos</span> <span class="kn">import</span> <span class="n">Point</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Hobbes&#39;</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s">&#39;tiger&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Marcel&#39;</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s">&#39;elephant&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Animal</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Bob&#39;</span><span class="p">,</span> <span class="n">species</span><span class="o">=</span><span class="s">&#39;elephant&#39;</span><span class="p">,</span> <span class="n">position</span><span class="o">=</span><span class="n">Point</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">You might wonder what these coordinates mean. Actually they don&#8217;t mean
+anything, they&#8217;re just examples. You&#8217;ll rarely have to enter this kind of
+data manually, usually it will come from a map, an external service, or
+something similar.</p>
+</div>
+<p>We can easily calculate the distance between Hobbes the tiger and Marcel the
+elephant using the <span class="xref std std-ref">_distance-queries</span> distance method:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">marcel</span> <span class="o">=</span> <span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;Marcel&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hobbes</span> <span class="o">=</span> <span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Hobbes&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">distance</span><span class="o">=</span><span class="n">Distance</span><span class="p">(</span><span class="s">&#39;position&#39;</span><span class="p">,</span> <span class="n">marcel</span><span class="o">.</span><span class="n">position</span><span class="p">)</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hobbes</span><span class="o">.</span><span class="n">distance</span>
+<span class="go">Distance(m=1568522.71629)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c"># Distance objects can easily be converted to various units</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hobbes</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">km</span>
+<span class="go">1568.52271629392</span>
+</pre></div>
+</div>
+<p>We can get the list of all individuals ordered by their distance from the only
+tiger in the reserve:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s">&#39;tiger&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">position</span><span class="p">)</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="s">&#39;distance&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>We can even search for elephants that are less than 500 km away from the
+tiger:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">django.contrib.gis.measure</span> <span class="kn">import</span> <span class="n">D</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">hobbes</span> <span class="o">=</span> <span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Hobbes&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Animal</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">species</span><span class="o">=</span><span class="s">&#39;elephant&#39;</span><span class="p">,</span> <span class="n">position__distance_lt</span><span class="o">=</span><span class="p">(</span><span class="n">hobbes</span><span class="o">.</span><span class="n">position</span><span class="p">,</span> <span class="n">D</span><span class="p">(</span><span class="n">km</span><span class="o">=</span><span class="mi">500</span><span class="p">)))</span>
+<span class="go">[&lt;Animal: Marcel (elephant)&gt;, &lt;Animal: Bob (elephant)&gt;]</span>
+</pre></div>
+</div>
+<p>At this point we have defined geographic models and we can already add/edit
+data and do distance calculations. Chances are you&#8217;ll want a better interface
+to enter the data though, and this is where the admin interface comes into
+play. Head over the <a class="reference internal" href="tutorial02.html"><em>part 2 of this tutorial</em></a> to start working with the admin.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Working with GeoDjango, part 1: the models</a><ul>
+<li><a class="reference internal" href="#setting-up">Setting up</a><ul>
+<li><a class="reference internal" href="#create-a-new-project">Create a new project</a></li>
+<li><a class="reference internal" href="#configure-settings-py">Configure <code class="docutils literal"><span class="pre">settings.py</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#defining-our-models">Defining our models</a></li>
+<li><a class="reference internal" href="#playing-with-the-api">Playing with the API</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../../../../index.html">Django 1.10.dev20160403091654 documentation</a>
+        
+        <ul><li>Working with GeoDjango, part 1: the models</li></ul>
+        
+      </li>
+  </ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../../_sources/ref/contrib/gis/intro/tutorial01.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Apr 03, 2016</p>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    <a title="Django 1.10.dev20160403091654 documentation" href="../../../../index.html" accesskey="U">up</a></div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>

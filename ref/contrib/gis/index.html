@@ -1,0 +1,273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>GeoDjango &mdash; Django 1.10.dev20160403091654 documentation</title>
+    
+    <link rel="stylesheet" href="../../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '1.10.dev20160403091654',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="top" title="Django 1.10.dev20160403091654 documentation" href="../../../contents.html" />
+    <link rel="up" title="contrib packages" href="../index.html" />
+    <link rel="next" title="GeoDjango model fields" href="model-fields.html" />
+    <link rel="prev" title="The flatpages app" href="../flatpages.html" />
+
+
+
+ 
+<script type="text/javascript" src="../../../templatebuiltins.js"></script>
+<script type="text/javascript">
+(function($) {
+    if (!django_template_builtins) {
+       // templatebuiltins.js missing, do nothing.
+       return;
+    }
+    $(document).ready(function() {
+        // Hyperlink Django template tags and filters
+        var base = "../../templates/builtins.html";
+        if (base == "#") {
+            // Special case for builtins.html itself
+            base = "";
+        }
+        // Tags are keywords, class '.k'
+        $("div.highlight\\-html\\+django span.k").each(function(i, elem) {
+             var tagname = $(elem).text();
+             if ($.inArray(tagname, django_template_builtins.ttags) != -1) {
+                 var fragment = tagname.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + tagname + "</a>");
+             }
+        });
+        // Filters are functions, class '.nf'
+        $("div.highlight\\-html\\+django span.nf").each(function(i, elem) {
+             var filtername = $(elem).text();
+             if ($.inArray(filtername, django_template_builtins.tfilters) != -1) {
+                 var fragment = filtername.replace(/_/, '-');
+                 $(elem).html("<a href='" + base + "#" + fragment + "'>" + filtername + "</a>");
+             }
+        });
+    });
+})(jQuery);
+</script>
+
+
+  </head>
+  <body role="document">
+
+    <div class="document">
+  <div id="custom-doc" class="yui-t6">
+    <div id="hd">
+      <h1><a href="../../../index.html">Django 1.10.dev20160403091654 documentation</a></h1>
+      <div id="global-nav">
+        <a title="Home page" href="../../../index.html">Home</a>  |
+        <a title="Table of contents" href="../../../contents.html">Table of contents</a>  |
+        <a title="Global index" href="../../../genindex.html">Index</a>  |
+        <a title="Module index" href="../../../py-modindex.html">Modules</a>
+      </div>
+      <div class="nav">
+    &laquo; <a href="../flatpages.html" title="The flatpages app">previous</a>
+     |
+    <a href="../../index.html" title="API Reference" accesskey="U">up</a>
+   |
+    <a href="model-fields.html" title="GeoDjango model fields">next</a> &raquo;</div>
+    </div>
+
+    <div id="bd">
+      <div id="yui-main">
+        <div class="yui-b">
+          <div class="yui-g" id="ref-contrib-gis-index">
+            
+  <div class="section" id="s-module-django.contrib.gis">
+<span id="s-geodjango"></span><span id="module-django.contrib.gis"></span><span id="geodjango"></span><h1>GeoDjango<a class="headerlink" href="#module-django.contrib.gis" title="Permalink to this headline">¶</a></h1>
+<p>GeoDjango is an included contrib module for Django that turns it into a
+world-class geographic Web framework. GeoDjango strives to make it as simple
+as possible to create geographic Web applications, like location-based services.
+Its features include:</p>
+<ul class="simple">
+<li>Django model fields for <a class="reference external" href="http://www.opengeospatial.org/">OGC</a> geometries</li>
+<li>Extensions to Django&#8217;s ORM for querying and manipulating spatial data.</li>
+<li>Loosely-coupled, high-level Python interfaces for GIS geometry operations and
+data formats</li>
+<li>Editing geometry fields from the admin</li>
+</ul>
+<div class="section" id="s-first-steps">
+<span id="first-steps"></span><h2>First steps<a class="headerlink" href="#first-steps" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><strong>From scratch:</strong>
+<a class="reference internal" href="install/index.html"><em>Installation</em></a></li>
+<li><strong>Tutorial:</strong>
+<a class="reference internal" href="intro/tutorial01.html"><em>Part 1: Models and lookups</em></a> |
+<a class="reference internal" href="intro/tutorial02.html"><em>Part 2: The admin site</em></a> |
+<a class="reference internal" href="intro/tutorial03.html"><em>Part 3: Representing geographical data</em></a></li>
+</ul>
+</div>
+<div class="section" id="s-models">
+<span id="models"></span><h2>Models<a class="headerlink" href="#models" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="model-fields.html">GeoDjango model fields</a></li>
+<li class="toctree-l1"><a class="reference internal" href="db-api.html">GeoDjango Database API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">Geographic Database Functions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoquerysets.html">GeoQuerySet API Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="measure.html">Measurement API</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-forms">
+<span id="forms"></span><h2>Forms<a class="headerlink" href="#forms" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="forms.html">GeoDjango form fields and widgets</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-working-with-geodjango">
+<span id="working-with-geodjango"></span><h2>Working with GeoDjango<a class="headerlink" href="#working-with-geodjango" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Admin integration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feeds.html">Geographic Feeds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitemaps.html">Geographic Sitemaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="commands.html">GeoDjango Management Commands</a></li>
+<li class="toctree-l1"><a class="reference internal" href="testing.html">Testing GeoDjango apps</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-dealing-with-geographical-data">
+<span id="dealing-with-geographical-data"></span><h2>Dealing with geographical data<a class="headerlink" href="#dealing-with-geographical-data" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="geographical-data.html#dealing-with-geometry-objects"><span>Geometry objects</span></a></li>
+<li><a class="reference internal" href="geographical-data.html#dealing-with-measurement-objects"><span>Measurement objects</span></a></li>
+<li><a class="reference internal" href="data-import.html"><em>Geographical data importation</em></a></li>
+</ul>
+</div>
+<div class="section" id="s-common-usecases">
+<span id="common-usecases"></span><h2>Common usecases<a class="headerlink" href="#common-usecases" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="serializers.html"><code class="docutils literal"><span class="pre">GeoJSON</span></code> Serializer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="feeds.html">Geographic Feeds</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sitemaps.html">Geographic Sitemaps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoip.html">Geolocation with GeoIP</a></li>
+<li class="toctree-l1"><a class="reference internal" href="geoip2.html">Geolocation with GeoIP2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="layermapping.html"><code class="docutils literal"><span class="pre">LayerMapping</span></code> data import utility</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="s-reference">
+<span id="reference"></span><h2>Reference<a class="headerlink" href="#reference" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="geos.html">GEOS API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gdal.html">GDAL API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ogrinspect.html">OGR Inspection</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      
+        
+          <div class="yui-b" id="sidebar">
+            
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../../contents.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">GeoDjango</a><ul>
+<li><a class="reference internal" href="#first-steps">First steps</a></li>
+<li><a class="reference internal" href="#models">Models</a></li>
+<li><a class="reference internal" href="#forms">Forms</a></li>
+<li><a class="reference internal" href="#working-with-geodjango">Working with GeoDjango</a></li>
+<li><a class="reference internal" href="#dealing-with-geographical-data">Dealing with geographical data</a></li>
+<li><a class="reference internal" href="#common-usecases">Common usecases</a></li>
+<li><a class="reference internal" href="#reference">Reference</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>Browse</h3>
+  <ul>
+    
+      <li>Prev: <a href="../flatpages.html">The flatpages app</a></li>
+    
+    
+      <li>Next: <a href="model-fields.html">GeoDjango model fields</a></li>
+    
+  </ul>
+  <h3>You are here:</h3>
+  <ul>
+      <li>
+        <a href="../../../index.html">Django 1.10.dev20160403091654 documentation</a>
+        
+          <ul><li><a href="../../index.html">API Reference</a>
+        
+          <ul><li><a href="../index.html"><code class="docutils literal"><span class="pre">contrib</span></code> packages</a>
+        
+        <ul><li>GeoDjango</li></ul>
+        </li></ul></li></ul>
+      </li>
+  </ul>
+
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../../_sources/ref/contrib/gis/index.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+              <h3>Last update:</h3>
+              <p class="topless">Apr 03, 2016</p>
+          </div>
+        
+      
+    </div>
+
+    <div id="ft">
+      <div class="nav">
+    &laquo; <a href="../flatpages.html" title="The flatpages app">previous</a>
+     |
+    <a href="../../index.html" title="API Reference" accesskey="U">up</a>
+   |
+    <a href="model-fields.html" title="GeoDjango model fields">next</a> &raquo;</div>
+    </div>
+  </div>
+
+      <div class="clearer"></div>
+    </div>
+  </body>
+</html>
